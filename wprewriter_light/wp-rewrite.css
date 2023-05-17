@@ -1,4 +1,4 @@
-.chatgpt-rewrite-modal {
+.wp-rewrite-modal {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -9,10 +9,10 @@
     z-index: 9999;
 }
 
-.chatgpt-rewrite-modal p {
+.wp-rewrite-modal p {
     margin: 0 0 15px 0;
 }
 
-.chatgpt-rewrite-modal button {
+.wp-rewrite-modal button {
     margin-right: 10px;
 }

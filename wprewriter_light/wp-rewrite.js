@@ -31,7 +31,7 @@
             fetchApiKey(); // Fetch the API key every time the Rewrite button is clicked
 
             if (!apiKey) {
-                alert('API Key is not set. Please set it in the ChatGPT API settings.');
+                alert('API Key is not set. Please set it in the WP Rewiter settings.');
                 return;
             }
 
@@ -45,9 +45,7 @@
             if (selectedBlock && selectedBlock.attributes.content) {
                 const selectedText = window.getSelection().toString();
 
-                console.log("Selected:", selectedText);
-
-                sendToChatGPTAPI(selectedText, sanitizedApiKey, (suggestion) => {
+                sendToRewriteApi(selectedText, sanitizedApiKey, (suggestion) => {
                     const selection = window.getSelection();
                     if (selection.rangeCount) {
                         const range = selection.getRangeAt(0);
@@ -57,8 +55,8 @@
                         const isWholeParagraph = selectedText.trim() === selectedBlock.attributes.content.trim();
                         const newContent = isWholeParagraph ? suggestion : selectedBlock.attributes.content;
 
-                        console.log("Suggested content:", suggestion);
-                        console.log("New paragraph:", newContent);
+                        //console.log("Suggested content:", suggestion);
+                        //console.log("New paragraph:", newContent);
 
                         updateBlockAttributes(selectedBlockClientId, {
                             content: newContent,
@@ -70,11 +68,11 @@
 
         const sidebarContent = createElement(
             "div",
-            {className: "chatgpt-rewrite-sidebar-content"},
+            {className: "wp-rewrite-sidebar-content"},
             createElement(
                 "p",
                 null,
-                "Select a Paragraph or Heading block, and then click the \"Rewrite\" button to rewrite its content."
+                "Select a Paragraph block or Sentence, and then click the \"Rewrite\" button to rewrite its content."
             ),
             createElement(Button, {isPrimary: true, onClick: onRewriteClick}, "Rewrite")
         );
@@ -82,19 +80,19 @@
         return createElement(
             PluginSidebar,
             {
-                name: "chatgpt-rewrite-sidebar",
+                name: "wp-rewrite-sidebar",
                 icon: "edit",
-                title: "ChatGPT Rewrite",
+                title: "WP Rewrite",
             },
             sidebarContent
         );
     }
 
-    registerPlugin("chatgpt-rewrite", {
+    registerPlugin("wp-rewrite", {
         render: WPRewriteSidebar,
     });
 
-    function sendToChatGPTAPI(text, apiKey, callback) {
+    function sendToRewriteApi(text, apiKey, callback) {
         var apiEndpoint =
             "https://api.openai.com/v1/engines/text-davinci-002/completions";
 
@@ -113,15 +111,15 @@
                 temperature: 1,
             }),
             success: function (response) {
-                console.log("API Response:", response);
+                //console.log("API Response:", response);
                 if (response.choices && response.choices.length > 0) {
                     var suggestion = response.choices[0].text.trim();
-                    console.log("Suggested Rewrite:", suggestion);
+                    //console.log("Suggested Rewrite:", suggestion);
                     callback(suggestion);
                 }
             },
             error: function (error) {
-                console.error("Error calling ChatGPT API:", error);
+                console.error("Error calling API:", error);
             },
         });
     }
