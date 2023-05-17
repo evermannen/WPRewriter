@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: ChatGPT Rewrite
+ * Plugin Name: WP Rewriter
  * Plugin URI: https://www.nicheassistant.com/wp-rewiter
  * Description: A plugin that allows you to rewrite content using API.
  * Version: 1.0
@@ -10,7 +10,7 @@
  */
 
 // Enqueue the JavaScript file in the block editor
-function chatgpt_rewrite_enqueue_assets()
+function wp_rewrite_enqueue_assets()
 {
     // Ensure that the script is only enqueued in the block editor.
     if (!is_admin() || get_current_screen()->base !== 'post') {
@@ -18,32 +18,32 @@ function chatgpt_rewrite_enqueue_assets()
     }
 
     wp_enqueue_script(
-        'chatgpt-rewrite-js',
-        plugin_dir_url(__FILE__) . 'chatgpt-rewrite.js',
+        'wp-rewrite-js',
+        plugin_dir_url(__FILE__) . 'wp-rewrite.js',
         array('wp-edit-post', 'wp-plugins', 'wp-components', 'wp-compose', 'wp-data', 'wp-element', 'wp-rich-text', 'jquery'),
-        filemtime(plugin_dir_path(__FILE__) . 'chatgpt-rewrite.js'),
+        filemtime(plugin_dir_path(__FILE__) . 'wp-rewrite.js'),
         true
     );
 }
 
-add_action('enqueue_block_editor_assets', 'chatgpt_rewrite_enqueue_assets');
+add_action('enqueue_block_editor_assets', 'wp_rewrite_enqueue_assets');
 
 // Add a menu item for the ChatGPT API settings
-function chatgpt_rewrite_menu()
+function wp_rewrite_menu()
 {
     add_options_page(
-        'ChatGPT API Settings',
-        'ChatGPT API',
+        'WP Rewriter Settings',
+        'WP Rewriter',
         'manage_options',
-        'chatgpt-api',
-        'chatgpt_rewrite_options'
+        'wp-api',
+        'wp_rewrite_options'
     );
 }
 
-add_action('admin_menu', 'chatgpt_rewrite_menu');
+add_action('admin_menu', 'wp_rewrite_menu');
 
-// Render the ChatGPT API settings page
-function chatgpt_rewrite_options()
+// Render the WP Rewrite API settings page
+function wp_rewrite_options()
 {
     if (!current_user_can('manage_options')) {
         wp_die('You do not have sufficient permissions to access this page.');
@@ -63,7 +63,7 @@ function chatgpt_rewrite_options()
         <form method="post" action="">
             <table class="form-table">
                 <tr valign="top">
-                    <th scope="row">API Key</th>
+                    <th scope="row">ChatGPT API Key</th>
                     <td>
                         <input type="text" name="chatgpt_api_key" value="<?php echo esc_attr($apiKey); ?>"/>
                     </td>
@@ -76,18 +76,18 @@ function chatgpt_rewrite_options()
 }
 
 // Register a REST API endpoint to get the API key
-function chatgpt_rewrite_register_routes()
+function wp_rewrite_register_routes()
 {
-    register_rest_route('chatgpt/v1', '/apikey', array(
+    register_rest_route('wp-rewrite/v1', '/apikey', array(
         'methods' => 'GET',
-        'callback' => 'chatgpt_rewrite_get_api_key',
+        'callback' => 'wp_rewrite_get_api_key',
     ));
 }
 
-add_action('rest_api_init', 'chatgpt_rewrite_register_routes');
+add_action('rest_api_init', 'wp_rewrite_register_routes');
 
 // Callback for the API key REST API endpoint
-function chatgpt_rewrite_get_api_key()
+function wp_rewrite_get_api_key()
 {
     $key = get_option('chatgpt_api_key', '');
     $key = str_replace('"', '', $key);

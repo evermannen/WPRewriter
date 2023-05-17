@@ -5,7 +5,7 @@
     const {useSelect, useDispatch} = wp.data;
     const {createElement, useEffect, useState} = wp.element;
 
-    function ChatGPTSidebar() {
+    function WPRewriteSidebar() {
         const [apiKey, setApiKey] = useState('');
 
         useEffect(() => {
@@ -13,7 +13,7 @@
         }, []);
 
         const fetchApiKey = () => {
-            fetch('/wp-json/chatgpt/v1/apikey')
+            fetch('/wp-json/wp-rewrite/v1/apikey')
                 .then(response => response.text())
                 .then(fetchedApiKey => {
                     const modifiedApiKey = fetchedApiKey.replaceAll('"', ''); // Remove all " characters
@@ -91,7 +91,7 @@
     }
 
     registerPlugin("chatgpt-rewrite", {
-        render: ChatGPTSidebar,
+        render: WPRewriteSidebar,
     });
 
     function sendToChatGPTAPI(text, apiKey, callback) {
