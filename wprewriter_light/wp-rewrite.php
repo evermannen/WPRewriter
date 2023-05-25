@@ -57,9 +57,27 @@ function wp_rewrite_options()
     // Fetch API Key
     $apiKey = get_option('chatgpt_api_key', '');
 
+    // Fetch the message of the day
+    $messageOfTheDay = '';
+    $response = wp_remote_get('https://api.nicheassistant.com/message_of_the_day');
+    if (!is_wp_error($response) && $response['response']['code'] == 200) {
+        $body = json_decode($response['body'], true);
+        if (isset($body['message'])) {
+            $messageOfTheDay = $body['message'];
+        }
+    }
+
     ?>
     <div class="wrap">
-        <h1>ChatGPT API Settings</h1>
+        <h1>WP Rewriter Settings</h1>
+        <p>WP Rewriter is a small and simple tool to help you paraphrase or rewrite your content.</p>
+        <p>More tools and updates at <a href="https://www.nicheassistant.com" target="_blank">Niche Assistant homepage</a>.</p>
+        <h2><strong>Latest news</strong></h2>
+        <p><?php echo esc_html($messageOfTheDay); ?></p>
+        <h2>API keys</h2>
+        <p>WP Rewriter uses ChatGPT in order to do the text rewrite, please enter your API key below. If you dont already have one you can signup and
+            request one at <a href="https://openai.com/" target="_blank">OpenAI</a>. If you need help, reach out to us
+                on Twitter <a href="https://twitter.com/niche_assistant" target="_blank">@niche_assistant</a></p>
         <form method="post" action="">
             <table class="form-table">
                 <tr valign="top">

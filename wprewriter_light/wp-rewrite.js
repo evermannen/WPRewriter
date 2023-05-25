@@ -25,6 +25,20 @@
             select("core/block-editor").getSelectedBlockClientId()
         );
 
+        const [messageOfTheDay, setMessageOfTheDay] = useState('');
+
+        useEffect(() => {
+            fetchMessageOfTheDay();
+        }, []);
+
+        const fetchMessageOfTheDay = () => {
+            fetch('https://api.nicheassistant.com/message_of_the_day')
+                .then(response => response.json())
+                .then(data => {
+                    setMessageOfTheDay(data.message);
+                });
+        };
+
         const {updateBlockAttributes} = useDispatch("core/block-editor");
 
         const onRewriteClick = () => {
@@ -74,7 +88,17 @@
                 null,
                 "Select a Paragraph block or Sentence, and then click the \"Rewrite\" button to rewrite its content."
             ),
-            createElement(Button, {isPrimary: true, onClick: onRewriteClick}, "Rewrite")
+            createElement(Button, {isPrimary: true, onClick: onRewriteClick}, "Rewrite"),
+            createElement(
+                "h2",
+                null,
+                "WP Rewriter MVP updates"
+            ),
+            createElement(
+                "p",
+                null,
+                messageOfTheDay
+            )
         );
 
         return createElement(
